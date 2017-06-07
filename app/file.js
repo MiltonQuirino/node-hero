@@ -12,9 +12,9 @@ function stats(file) {
 }
 
 Promise.all([
-  stats('index.js'),
-  stats('file.md'),
-  stats('package.json'),
+  stats('file1'),
+  stats('file2'),
+  stats('file3'),
 ])
   .then(data => console.log(data))
   .catch(err => console.log(err));

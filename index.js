@@ -1,20 +1,16 @@
-const fs = require('fs');
+const express = require('express');
 
-function stats(file) {
-  return new Promise((resolve, reject) => {
-    fs.stat(file, (err, data) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve(data);
-    });
+const app = express()
+
+app.use((request, response, next) => {  
+  console.log(request.headers);
+  next();
+})
+
+app.get('/', (request, response) => {  
+  response.json({
+    chance: request.chance,
   });
-}
+});
 
-Promise.all([
-  stats('index.js'),
-  stats('file.md'),
-  stats('package.json'),
-])
-  .then(data => console.log(data))
-  .catch(err => console.log(err));
+app.listen(3000);

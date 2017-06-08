@@ -1,8 +1,8 @@
-
 const path = require('path');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const pg = require('pg');
+const request = require('request-promise');
 
 
 const conString = 'postgres://postgres:123456@localhost/node_hero';
@@ -10,27 +10,32 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
 
 app.use(bodyParser.json());
 
+const options = {  
+  method: 'GET',
+  uri: 'https://risingstack.com',
+  headers: {
+    'User-Agent': 'Request-Promise',
+    'Authorization': 'Basic QWxhZGRpbjpPcGVuU2VzYW1l'
+  }
+}
 
-// pg.connect(conString, function (err, client, done) {
-//   if (err) {
-//     return console.error('error fetching client from pool', err)
-//   }
-//   client.query('SELECT $1::varchar AS my_first_query', ['node hero'], function (err, result) {
-//     done();
 
-//     if (err) {
-//       return console.error('error happened during query', err)
-//     }
-//     console.log(result.rows[0]);
-//     process.exit(0);
-//   });
-// });
+request(options)  
+  .then(function (response) {
+    console.log(response);
+    // Request was successful, use the response object at will
+  })
+  .catch(function (err) {
+    // Something bad happened, handle the error
+    console.log(err);
+  });
 
 app.engine('.hbs', exphbs({
   defaultLayout: 'main',
@@ -46,6 +51,7 @@ app.get('/', (request, response) => {
     name: 'John',
   });
 });
+
 
 const users = [];
 
